@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venteliste | Growly Garden</title>
+    <style>
+        :root {
+            --bg: #060806;
+            --bg-soft: #0b120d;
+            --panel: rgba(11, 17, 13, 0.88);
+            --panel-strong: rgba(14, 22, 17, 0.96);
+            --text: #f2f4ef;
+            --muted: #a1aba2;
+            --muted-soft: #6f7a72;
+            --line: rgba(169, 198, 173, 0.12);
+            --accent: #86c996;
+            --accent-soft: rgba(134, 201, 150, 0.12);
+            --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+            margin: 0;
+        }
+
+        body {
+            font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 12% 18%, rgba(52, 103, 62, 0.22), transparent 24%),
+                radial-gradient(circle at 84% 78%, rgba(52, 103, 62, 0.16), transparent 22%),
+                linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%);
+        }
+
+        .background-grid {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.18;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 39px,
+                    rgba(134, 201, 150, 0.04) 39px,
+                    rgba(134, 201, 150, 0.04) 40px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 39px,
+                    rgba(134, 201, 150, 0.04) 39px,
+                    rgba(134, 201, 150, 0.04) 40px
+                );
+        }
+
+        .shell {
+            position: relative;
+            z-index: 1;
+            width: min(100%, 1120px);
+            margin: 0 auto;
+            padding: 28px 32px 44px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 52px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-logo {
+            width: 82px;
+            height: 82px;
+            object-fit: contain;
+            filter: drop-shadow(0 12px 20px rgba(74, 127, 86, 0.16));
+        }
+
+        .brand-name,
+        .brand-subtitle,
+        .kicker,
+        .card-label {
+            margin: 0;
+        }
+
+        .brand-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .brand-subtitle {
+            margin-top: 4px;
+            color: var(--muted-soft);
+            font-size: 0.84rem;
+        }
+
+        .back-link {
+            color: #dce5dd;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        .card {
+            width: min(100%, 560px);
+            margin: 0 auto;
+            padding: 28px;
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            background: linear-gradient(180deg, var(--panel-strong) 0%, var(--panel) 100%);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+
+        .kicker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: fit-content;
+            margin: 0 auto 18px;
+            padding: 11px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(134, 201, 150, 0.14);
+            background: var(--accent-soft);
+            color: #d6ddd6;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.04;
+            letter-spacing: -0.03em;
+            text-align: center;
+        }
+
+        .lead {
+            margin: 0 auto 22px;
+            max-width: 38ch;
+            color: #e1e7e1;
+            font-size: 1rem;
+            line-height: 1.65;
+            text-align: center;
+        }
+
+        .card-label {
+            margin-bottom: 8px;
+            color: var(--muted-soft);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        form {
+            display: grid;
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        input,
+        select,
+        textarea,
+        button {
+            font: inherit;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid rgba(169, 198, 173, 0.16);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text);
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: var(--muted-soft);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .primary-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 13px 18px;
+            border: 0;
+            border-radius: 999px;
+            background: var(--accent);
+            color: #0a2514;
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+        }
+
+        .primary-cta:hover {
+            filter: brightness(1.05);
+        }
+
+        .note {
+            margin: 18px 0 0;
+            color: var(--muted);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .note strong {
+            color: #dce5dd;
+        }
+
+        @media (max-width: 760px) {
+            .shell {
+                padding: 22px 20px 34px;
+            }
+
+            .topbar {
+                margin-bottom: 34px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .card {
+                padding: 22px 18px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-grid"></div>
+
+    <main class="shell">
+        <header class="topbar">
+            <div class="brand">
+                <img class="brand-logo" src="assets/logo.png" alt="Growly Garden logo">
+                <div>
+                    <p class="brand-name">Growly Garden</p>
+                    <p class="brand-subtitle">Din Digitale Drivhus-Assistent</p>
+                </div>
+            </div>
+
+            <a class="back-link" href="index.html">Tilbake</a>
+        </header>
+
+        <section class="card">
+            <p class="kicker">🚧 UNDER UTVIKLING 🚧</p>
+            <p class="card-label">Venteliste</p>
+            <h1>Bli med tidlig</h1>
+            <p class="lead">Legg igjen e-posten din hvis du vil høre mer om Growly Garden som investor, utvikler eller tidlig bruker.</p>
+
+            <form action="https://formspree.io/f/mojpqdan" method="POST">
+                <div class="grid">
+                    <input type="text" name="name" placeholder="Navn (valgfritt)">
+                    <select name="interest">
+                        <option value="">Jeg er mest interessert som...</option>
+                        <option value="user">Tidlig Bruker</option>
+                        <option value="investor">Investor</option>
+                        <option value="developer">Utvikler</option>
+                    </select>
+                </div>
+
+                <input type="email" name="email" placeholder="E-post" required>
+                <textarea name="message" placeholder="Kort melding (valgfritt)"></textarea>
+                <input type="hidden" name="_subject" value="Ny Growly Garden-registrering">
+                <input type="hidden" name="_next" value="thanks.html">
+
+                <button class="primary-cta" type="submit">BLI MED PÅ VENTELISTE</button>
+            </form>
+
+            <p class="note">🌱 Din hage venter.<br>Meld deg på – vær med fra dag 1!</p>
+        </section>
+    </main>
+</body>
+</html>
